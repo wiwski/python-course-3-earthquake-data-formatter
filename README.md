@@ -12,8 +12,8 @@ Le script doit extraire l'information du fichier et la mettre en forme en l'affi
 on affiche ensuite les 15 premiers résultats.
 Les différents paramètres sont listé [ici](https://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php). On retiendra seulement `time`, `latitude`, `longitude`, `depth`, et `mag`.
 
-La mise en forme peut se faire dans ce style:
-[](https://i.ytimg.com/vi/qZMX2qUJRoU/hqdefault.jpg)
+La mise en forme peut se faire dans ce style:<br><br>
+![Image](https://i.ytimg.com/vi/qZMX2qUJRoU/hqdefault.jpg)
 
 
 #### Optionnel
