@@ -1,4 +1,4 @@
-# Exercice d'extraction et de formattage de données sismiques à partir fichier CSV
+# Exercice d'extraction et de formattage de données sismiques à partir d'un fichier CSV
 
 ### Objectif
 L'objectif est d'extraire la donnée de fichiers CSV contenant des relevés sismiques à partir du site [earthquake.usgs.gov](https://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php).
