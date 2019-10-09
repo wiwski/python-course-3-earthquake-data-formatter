@@ -6,7 +6,6 @@ Un extracteur de données sismiques au format CSV
 import argparse
 from pathlib import Path
 
-
 def main(args):
     """ Main entry point of the app """
 
@@ -29,9 +28,11 @@ def main(args):
     rows = file_content.split("\n")
     rows = [[col for col in row.split(",")] for row in rows]
 
+    # [0, 1, 2, 3]
     indexes_to_keep = [index for index, label in enumerate(rows[0]) \
                        if label in labels_wanted]
 
+    # [time, latitude, longitude, ...]
     labels = rows.pop(0)
     filtered_labels = [labels[index] for index in indexes_to_keep]
 
@@ -39,9 +40,9 @@ def main(args):
     print("_" * 50)
     print("\n")
 
-    sort_func = lambda e: e[filtered_labels.index(sort_by)]
-    rows_to_display = rows[:16] 
+    rows_to_display = rows[:15] 
     if sort_by:
+        sort_func = lambda e: e[filtered_labels.index(sort_by)]
         rows_to_display.sort(key=sort_func)
 
     for row in rows_to_display:
