@@ -6,6 +6,8 @@ Un extracteur de données sismiques au format CSV
 import argparse
 from pathlib import Path
 
+from sism.models import Earthquake, Catalog
+
 def main(args):
     """ Main entry point of the app """
 
@@ -28,26 +30,33 @@ def main(args):
     rows = file_content.split("\n")
     rows = [[col for col in row.split(",")] for row in rows]
 
-    # [0, 1, 2, 3]
-    indexes_to_keep = [index for index, label in enumerate(rows[0]) \
-                       if label in labels_wanted]
+    index_mapping = {label: index for index, label in enumerate(rows[0]) \
+                       if label in labels_wanted}
+    earthquake_catalog = Catalog()
+    for index, row in enumerate(rows[1:]):
+        try:
+            earthquake = Earthquake(
+                **{label: row[index] for label, index in index_mapping.items()}
+            )
+        except IndexError:
+        except ValueError:
+            continue
+        earthquake_catalog.append(earthquake)
+        
 
     # [time, latitude, longitude, ...]
-    labels = rows.pop(0)
-    filtered_labels = [labels[index] for index in indexes_to_keep]
+    filtered_labels = Catalog.earthquake_labels()
 
     print("\t\t".join(filtered_labels))
     print("_" * 50)
     print("\n")
 
-    rows_to_display = rows[:15] 
+    rows_to_display = rows[1:15]
     if sort_by:
-        sort_func = lambda e: e[filtered_labels.index(sort_by)]
-        rows_to_display.sort(key=sort_func)
+        earthquake_catalog.sort(sort_by)
 
-    for row in rows_to_display:
-        display_row = [row[index] for index in indexes_to_keep]
-        print("\t".join(display_row))
+    for earthquake in earthquake_catalog[:15]:
+        print(earthquake)
 
     print("_" * 50)
 
