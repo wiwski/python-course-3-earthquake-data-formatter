@@ -6,43 +6,43 @@ que l'on peut passé comme arguments lorsqu'on instancie la classe.
 Catalog est une classe représentant un 
 """
 
-class Earthquake:
-
-    def __init__(self, time, latitude, longitude, depth, mag):
-        self.time = time
-        self.latitude = latitude
-        self.longitude = longitude
-        self.depth = depth
-        self.mag = mag
-
-    def __repr__(self):
-        return f"Earthquake, mag {self.mag} / {self.time} / {self.latitude},{self.longitude}"
-
-    @property
-    def time(self):
-        return self.__time
-    @time.setter
-    def time(self, time):
-        """
-        Check date_time value
-        """
-        if isinstance(time,str):
-            self.__time = time
-        else:
-            raise ValueError('Date-time must be a string!')
-
-    @property
-    def latitude(self):
-        return self.__latitude
-    @latitude.setter
-    def latitude(self, latitude):
-        """
-        Check latitude value
-        """
-        if isinstance(latitude,float) or isinstance(latitude,int) or (isinstance(latitude,str) and latitude.isnumeric()):
-            self.__latitude = latitude
-        else:
-            raise ValueError('latitude must be a value!')
+# class Earthquake:
+#
+#     def __init__(self, time, latitude, longitude, depth, mag):
+#         self.time = time
+#         self.latitude = latitude
+#         self.longitude = longitude
+#         self.depth = depth
+#         self.mag = mag
+#
+#     def __repr__(self):
+#         return f"Earthquake, mag {self.mag} / {self.time} / {self.latitude},{self.longitude}"
+#
+#     @property
+#     def time(self):
+#         return self.__time
+#     @time.setter
+#     def time(self, time):
+#         """
+#         Check date_time value
+#         """
+#         if isinstance(time,str):
+#             self.__time = time
+#         else:
+#             raise ValueError('Date-time must be a string!')
+#
+#     @property
+#     def latitude(self):
+#         return self.__latitude
+#     @latitude.setter
+#     def latitude(self, latitude):
+#         """
+#         Check latitude value
+#         """
+#         if isinstance(latitude,float) or isinstance(latitude,int) or (isinstance(latitude,str) and latitude.isnumeric()):
+#             self.__latitude = latitude
+#         else:
+#             raise ValueError('latitude must be a value!')
 
 
 class Catalog(list):
