@@ -8,6 +8,7 @@ Catalog est une classe représentant un
 
 from sism.tables import Earthquake
 
+
 class Catalog(list):
     
     def __add__(self, rhs):
@@ -53,3 +54,21 @@ class Catalog(list):
             earthquake_catalogue.append(earthquake)
 
         return earthquake_catalogue
+
+    @classmethod
+    def from_query(cls, session, dict_query_params):
+
+        catalogue = session.query(Earthquake).filter(
+            Earthquake.time >= dict_query_params['date_min'],
+            Earthquake.time <= dict_query_params['date_max'],
+            Earthquake.latitude >= dict_query_params['lat_min'],
+            Earthquake.latitude <= dict_query_params['lat_max'],
+            Earthquake.longitude >= dict_query_params['lon_min'],
+            Earthquake.longitude <= dict_query_params['lon_max'],
+            Earthquake.depth >= dict_query_params['depth_min'],
+            Earthquake.depth <= dict_query_params['depth_max'],
+            Earthquake.mag >= dict_query_params['mag_min'],
+            Earthquake.mag <= dict_query_params['mag_max']
+        )
+
+        return catalogue
