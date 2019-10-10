@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Upload</h1>
+    <br>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    <br>
+    {% endif %}
+    {% endwith %}
+    <form method="POST" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="exampleFormControlFile1">Upload de CSV</label>
+            <input type="file" class="form-control-file" id="exampleFormControlFile1" name="file">
+        </div>
+        <button type="submit">Upload</button>
+    </form>
+</div>
+
+{% endblock %}
