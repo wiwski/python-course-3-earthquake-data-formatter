@@ -11,8 +11,6 @@ from sism.models import Earthquake, Catalog
 def main(args):
     """ Main entry point of the app """
 
-    labels_wanted = ["time", "latitude", "longitude", "depth", "mag"]
-
     # On récupère le path du fichier à partir des arguments entrés par l'utilisateur
     file_path = Path(args.file)
     # On peut utilisé cet argument pour trié les résultats
@@ -30,18 +28,7 @@ def main(args):
     rows = file_content.split("\n")
     rows = [[col for col in row.split(",")] for row in rows]
 
-    index_mapping = {label: index for index, label in enumerate(rows[0]) \
-                       if label in labels_wanted}
-    earthquake_catalog = Catalog()
-    for index, row in enumerate(rows[1:]):
-        try:
-            earthquake = Earthquake(
-                **{label: row[index] for label, index in index_mapping.items()}
-            )
-        except IndexError:
-            continue
-        earthquake_catalog.append(earthquake)
-        
+    earthquake_catalog = Catalog.from_csv_list(rows)
 
     # [time, latitude, longitude, ...]
     filtered_labels = Catalog.earthquake_labels()
