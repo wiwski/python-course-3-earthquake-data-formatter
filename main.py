@@ -39,7 +39,6 @@ def main(args):
                 **{label: row[index] for label, index in index_mapping.items()}
             )
         except IndexError:
-        except ValueError:
             continue
         earthquake_catalog.append(earthquake)
         
