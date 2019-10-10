@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, Float
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.schema import UniqueConstraint,ForeignKey,ForeignKeyConstraint
+from sqlalchemy.schema import UniqueConstraint
+
 Base = declarative_base()
 
 
@@ -19,6 +20,7 @@ class Earthquake(Base):
                                                                    self.time.strftime("%d %b %Y %H:%M:%S"),
                                                                    self.latitude,
                                                                    self.longitude)
+
 
 def create_tables(engine):
     Base.metadata.create_all(engine)

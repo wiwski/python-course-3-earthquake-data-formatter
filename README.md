@@ -19,3 +19,18 @@ La mise en forme peut se faire dans ce style:<br><br>
 #### Optionnel
 
 L'utilisateur peut passer un flag `-s` ou `--sort` pour trier les résultats par un paramètre précis.
+
+# Sélection dans la BDD
+Sélection selon les valeurs des attributs des séismes contenus 
+dans le catalogue. Dictionnaire avec les clés:
+* date_min (!! datetime object)
+* date_min (!! datetime object)
+* lat_min
+* lat_max
+* lon_min
+* lon_max
+* depth_min
+* depth_max
+* mag_min
+* mag_max
+

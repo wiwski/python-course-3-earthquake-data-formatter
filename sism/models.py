@@ -43,3 +43,43 @@ class Catalog(list):
     @classmethod
     def earthquake_labels(cls):
         return ["time", "latitude", "longitude", "depth", "mag"]
+
+    @classmethod
+    def from_csv_list(cls,rows):
+        """
+        Gets csv list with first row usgs catalogue header followed by usgs catalogue data
+        :return: Catalog
+        """
+        index_mapping = {label: index for index, label in enumerate(rows[0]) \
+                         if label in cls.earthquake_labels()}
+
+        earthquake_catalogue = Catalog()
+        for index, row in enumerate(rows[1:]):
+            try:
+                earthquake = Earthquake(
+                    **{label: row[index] for label, index in index_mapping.items()}
+                )
+            except IndexError:
+                print(f"Element {index+1} in input csv list not correct!")
+                continue
+            earthquake_catalogue.append(earthquake)
+
+        return earthquake_catalogue
+
+    @classmethod
+    def from_query(cls, session, dict_query_params):
+
+        catalogue = session.query(Earthquake).filter(
+            Earthquake.time >= dict_query_params['date_min'],
+            Earthquake.time <= dict_query_params['date_max'],
+            Earthquake.latitude >= dict_query_params['lat_min'],
+            Earthquake.latitude <= dict_query_params['lat_max'],
+            Earthquake.longitude >= dict_query_params['lon_min'],
+            Earthquake.longitude <= dict_query_params['lon_max'],
+            Earthquake.depth >= dict_query_params['depth_min'],
+            Earthquake.depth <= dict_query_params['depth_max'],
+            Earthquake.mag >= dict_query_params['mag_min'],
+            Earthquake.mag <= dict_query_params['mag_max']
+        )
+
+        return catalogue
