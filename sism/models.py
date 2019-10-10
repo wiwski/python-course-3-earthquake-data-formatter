@@ -12,10 +12,10 @@ from sism.tables import Earthquake
 
 
 class Catalog(list):
-    
+
     def __add__(self, rhs):
         return Catalog(super().__add__(rhs))
-    
+
     def __getitem__(self, item):
         result = list.__getitem__(self, item)
         try:
@@ -27,7 +27,7 @@ class Catalog(list):
         if type(object) is not Earthquake:
             raise ValueError("Items in Catalog should be of type Earthquake")
         super().append(object)
-    
+
     def sort(self, attribute: str):
         super().sort(key=lambda earthquake: getattr(earthquake, attribute))
 
@@ -45,20 +45,24 @@ class Catalog(list):
         return ["time", "latitude", "longitude", "depth", "mag"]
 
     @classmethod
-    def from_csv_list(cls,rows):
+    def from_csv_list(cls, rows):
         """
         Gets csv list with first row usgs catalogue header followed by usgs catalogue data
         :return: Catalog
         """
-        index_mapping = {label: index for index, label in enumerate(rows[0]) \
+        index_mapping = {label: index for index, label in enumerate(rows[0])
                          if label in cls.earthquake_labels()}
 
         earthquake_catalogue = Catalog()
         for index, row in enumerate(rows[1:]):
             try:
-                earthquake = Earthquake(
-                    **{label: row[index] for label, index in index_mapping.items()}
-                )
+                eq_dict = {label: row[index]
+                           for label, index in index_mapping.items()}
+                eq_dict['time'] = datetime.strptime(
+                    eq_dict['time'], "%Y-%m-%dT%H:%M:%S.%fZ")
+                for float_label in ('latitude', 'longitude', 'depth', 'mag'):
+                    eq_dict[float_label] = float(eq_dict[float_label])
+                earthquake = Earthquake(**eq_dict)
             except IndexError:
                 print(f"Element {index+1} in input csv list not correct!")
                 continue
