@@ -42,3 +42,25 @@ class Catalog(list):
     @classmethod
     def earthquake_labels(cls):
         return ["time", "latitude", "longitude", "depth", "mag"]
+
+    @classmethod
+    def from_csv_list(cls,rows):
+        """
+        Gets csv list with first row usgs catalogue header followed by usgs catalogue data
+        :return:
+        """
+        index_mapping = {label: index for index, label in enumerate(rows[0]) \
+                         if label in cls.earthquake_labels()}
+
+        earthquake_catalogue = Catalog()
+        for index, row in enumerate(rows[1:]):
+            try:
+                earthquake = Earthquake(
+                    **{label: row[index] for label, index in index_mapping.items()}
+                )
+            except IndexError:
+                print(f"Element {index+1} in input csv list not correct!")
+                continue
+            earthquake_catalogue.append(earthquake)
+
+        return earthquake_catalogue
