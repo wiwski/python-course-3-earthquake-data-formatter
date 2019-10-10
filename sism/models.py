@@ -5,18 +5,10 @@ que l'on peut passé comme arguments lorsqu'on instancie la classe.
 
 Catalog est une classe représentant un 
 """
+from sqlalchemy.exc import IntegrityError
+from datetime import datetime
 
-class Earthquake:
-
-    def __init__(self, time, latitude, longitude, depth, mag):
-        self.time = time
-        self.latitude = latitude
-        self.longitude = longitude
-        self.depth = depth
-        self.mag = mag
-
-    def __repr__(self):
-        return f"Earthquake, mag {self.mag} / {self.time} / {self.latitude},{self.longitude}"
+from sism.tables import Earthquake
 
 
 class Catalog(list):
@@ -38,7 +30,16 @@ class Catalog(list):
     
     def sort(self, attribute: str):
         super().sort(key=lambda earthquake: getattr(earthquake, attribute))
-    
+
+    def save_to_db(self, session):
+        for earthquake in self:
+            session.add(earthquake)
+            try:
+                session.commit()
+            except IntegrityError:
+                session.rollback()
+        return True
+
     @classmethod
     def earthquake_labels(cls):
         return ["time", "latitude", "longitude", "depth", "mag"]
