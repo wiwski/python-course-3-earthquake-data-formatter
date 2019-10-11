@@ -7,7 +7,9 @@ Catalog est une classe représentant un
 """
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
-
+import numpy as np
+import matplotlib.pyplot as plt
+from random import randrange
 from sism.tables import Earthquake
 
 
@@ -28,8 +30,8 @@ class Catalog(list):
             raise ValueError("Items in Catalog should be of type Earthquake")
         super().append(object)
 
-    def sort(self, attribute: str):
-        super().sort(key=lambda earthquake: getattr(earthquake, attribute))
+    def sort(self, attribute: str,*args,**kwargs):
+        super().sort(key=lambda earthquake: getattr(earthquake, attribute),*args,**kwargs)
 
     def save_to_db(self, session):
         for earthquake in self:
@@ -100,3 +102,60 @@ class Catalog(list):
         catalogue = Catalog(query.all())
 
         return catalogue
+
+    def keep_biggest(self,N=5):
+        N=min(len(self),N)
+        print(f"  keep N={N} biggest earthquakes, starting from biggest")
+        new_catalog=Catalog(self)
+        new_catalog.sort("mag",reverse=True)
+        return new_catalog[0:N]
+
+    def stats_catalog(self,attribute="mag"):
+        cat2mat=list()
+        for i, eqk in enumerate(self):
+            # print(i)
+            cat2mat.append([0,eqk.latitude,eqk.longitude,eqk.depth,eqk.mag])
+        # print(cat2mat)
+        mean_var=np.mean(cat2mat,axis=0)
+        min_var=np.min(cat2mat,axis=0)
+        max_var=np.max(cat2mat,axis=0)
+        std_var=np.std(cat2mat,axis=0)
+        dico=dict()
+        labels_list=self.earthquake_labels()
+        for i, attribute in enumerate(labels_list):
+            if type(cat2mat[0][i])!=type(datetime):
+                dico["mean_"+attribute]=float(mean_var[i])
+                dico["min_"+attribute]=float(min_var[i])
+                dico["max_"+attribute]=float(max_var[i])
+                dico["std_"+attribute]=float(std_var[i])
+        # print(dico)
+
+        nb_bin=10
+        dico["nb_bin"]=nb_bin
+        imag=labels_list.index("mag")
+        print("imag "+str(imag))
+        cat2mat=np.array(cat2mat)
+        aa=cat2mat[:,imag]
+        # aa=cat2mat[imag+ i*5 for i in range(len(self))]
+        print(aa)
+        fig=plt.figure()
+        mag_ybins,mag_xbins,patches=plt.hist(aa)
+        plt.title(f"Histogrammes des magnitudes pour les {len(self)} séismes sélectionnés, regroupés sur {nb_bin} bins")
+        plt.xlabel("Magnitude")
+        plt.ylabel("Nombre d'occurnces")
+        plt.show()
+        dico["mag_xbins"]=mag_xbins
+        dico["mag_ybins"]=mag_ybins
+
+        suff="png"
+        fname="./data/histogramme{0:d}.".format(randrange(100000))+suff
+        fig.savefig(fname, dpi=None, facecolor='w', edgecolor='w',
+            orientation='portrait', papertype=None, format=suff,
+            transparent=False, bbox_inches=None, pad_inches=0.1,
+            frameon=None, metadata=None)
+        plt.close()
+
+        dico["histo_name"]=fname
+
+        return dico
+
