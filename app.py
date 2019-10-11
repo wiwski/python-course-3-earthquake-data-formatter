@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, escape, request, render_template, flash, redirect
+from flask import Flask, escape, request, render_template, flash, redirect, session, url_for
 from flask_bootstrap import Bootstrap
 from werkzeug.utils import secure_filename
 
@@ -20,7 +20,6 @@ Bootstrap(app)
 
 
 create_tables(engine)
-session = create_session(engine)
 
 
 @app.route('/')
@@ -47,7 +46,8 @@ def upload_csv():
             ext = filename.split('.')[-1]
             f = file.stream.read().decode("utf-8")
             rows = [row.split(",") for row in f.split("\n")]
-            Catalog.from_csv_list(rows).save_to_db(session)
+            db_session = create_session(engine)
+            Catalog.from_csv_list(rows).save_to_db(db_session)
             file.save(os.path.join(
                 app.config['UPLOAD_FOLDER'], time.strftime(f"%Y%m%d-%H%M%S.{ext}")))
             flash('Les données ont bien été importées')
@@ -57,6 +57,33 @@ def upload_csv():
 
 @app.route('/query', methods=['GET', 'POST'])
 def query():
+    import uuid
+    from datetime import datetime
     if request.method == 'POST':
-        pass
+        float_params = ['lat_min', 'lat_max', 'long_min', 'long_max',
+                        'depth_min', 'depth_max', 'mag_min', 'mag_max']
+        date_params = ['date_min', 'date_max']
+
+        def convert_type(key, param):
+            if not param:
+                return None
+            if key in float_params:
+                return float(param)
+            elif key in date_params:
+                return datetime.strptime(param, "%Y-%m-%dT%H:%M:%S.%fZ")
+
+        query_params = {key: convert_type(key, value)
+                        for key, value in request.form.items()}
+        query_id = uuid.uuid1()
+        session[f"query_{query_id}"] = query_params
+        return redirect(url_for('results',
+                                query_id=query_id))
     return render_template('query.html')
+
+
+@app.route('/results/<query_id>', methods=['GET'])
+def results(query_id):
+    query_params = session.get(f"query_{query_id}")
+    db_session = create_session(engine)
+    catalog = Catalog.from_query(db_session, query_params)
+    return render_template('results.html', earthquakes=catalog)

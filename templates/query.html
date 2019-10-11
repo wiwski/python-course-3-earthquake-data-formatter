@@ -13,7 +13,7 @@
     <br>
     {% endif %}
     {% endwith %}
-    <form>
+    <form method="POST">
         <div class="form-row">
             <div class="col form-group">
                 <label for="latmin">Latitude minimum</label>
@@ -58,21 +58,23 @@
                 <input type="number" class="form-control" placeholder="Magnitude maximum" name="mag_max" id="mag">
             </div>
         </div>
+        <br>
 
         <div class="form-row">
             <div class="col form-group">
                 <div>
                     <label for="flatpickr">Date minimum</label>
                 </div>
-                <input id="flatpickr" name="date_min" class="form-control w-100" placeholder="Date maximum">
+                <input name="date_min" class="form-control w-100 flatpickr" placeholder="Date minimum">
             </div>
             <div class="col form-group">
                 <div>
                     <label for="flatpickr">Date maximum</label>
                 </div>
-                <input id="flatpickr" name="date_max" class="form-control w-100" placeholder="Date maximum">
+                <input name="date_max" class="form-control w-100 flatpickr" placeholder="Date maximum">
             </div>
         </div>
+        <br>
 
         <button type="submit" class="btn btn-primary">Rechercher</button>
     </form>
@@ -81,7 +83,12 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         // your code goes here
-        flatpickr('#flatpickr');
+        flatpickr('.flatpickr', {
+            dateFormat: 'Z',
+            enableTime: true,
+            altInput: true,
+            altFormat: 'Y-m-d h:i K'
+        });
 
     }, false);
 </script>

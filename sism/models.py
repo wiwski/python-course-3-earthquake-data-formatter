@@ -76,25 +76,25 @@ class Catalog(list):
 
         query = session.query(Earthquake)
 
-        if 'date_min' in query_params:
+        if query_params.get('date_min', None):
             query = query.filter(Earthquake.time >= query_params['date_min'])
-        if 'date_max' in query_params:
+        if query_params.get('date_max', None):
             query = query.filter(Earthquake.time <= query_params['date_max'])
-        if 'lat_min' in query_params:
+        if query_params.get('lat_min', None):
             query = query.filter(Earthquake.latitude >= query_params['lat_min'])
-        if 'lat_max' in query_params:
+        if query_params.get('lat_max', None):
             query = query.filter(Earthquake.latitude <= query_params['lat_max'])
-        if 'lon_min' in query_params:
+        if query_params.get('lon_min', None):
             query = query.filter(Earthquake.longitude >= query_params['lon_min'])
-        if 'lon_max' in query_params:
+        if query_params.get('lon_max', None):
             query = query.filter(Earthquake.longitude <= query_params['lon_max'])
-        if 'depth_min' in query_params:
+        if query_params.get('depth_min', None):
             query = query.filter(Earthquake.depth >= query_params['depth_min'])
-        if 'depth_max' in query_params:
+        if query_params.get('depth_max', None):
             query = query.filter(Earthquake.depth <= query_params['depth_max'])
-        if 'mag_min' in query_params:
+        if query_params.get('mag_min', None):
             query = query.filter(Earthquake.mag >= query_params['mag_min'])
-        if 'mag_max' in query_params:
+        if query_params.get('mag_max', None):
             query = query.filter(Earthquake.mag <= query_params['mag_max'])
 
         catalogue = Catalog(query.all())
