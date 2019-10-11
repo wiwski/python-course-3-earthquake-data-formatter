@@ -105,57 +105,52 @@ class Catalog(list):
 
     def keep_biggest(self,N=5):
         N=min(len(self),N)
-        print(f"  keep N={N} biggest earthquakes, starting from biggest")
+        # print(f"  keep N={N} biggest earthquakes, starting from biggest")
         new_catalog=Catalog(self)
         new_catalog.sort("mag",reverse=True)
         return new_catalog[0:N]
 
-    def stats_catalog(self,attribute="mag"):
+    def stats_catalog(self,attribute_histo="mag"):
+        from tempfile import TemporaryDirectory
+        import base64
         cat2mat=list()
         for i, eqk in enumerate(self):
-            # print(i)
             cat2mat.append([0,eqk.latitude,eqk.longitude,eqk.depth,eqk.mag])
-        # print(cat2mat)
         mean_var=np.mean(cat2mat,axis=0)
         min_var=np.min(cat2mat,axis=0)
         max_var=np.max(cat2mat,axis=0)
         std_var=np.std(cat2mat,axis=0)
         dico=dict()
         labels_list=self.earthquake_labels()
+        arrondi=[0,4,4,3,1]
         for i, attribute in enumerate(labels_list):
+            print(type(cat2mat[0][i]))
             if type(cat2mat[0][i])!=type(datetime):
-                dico["mean_"+attribute]=float(mean_var[i])
-                dico["min_"+attribute]=float(min_var[i])
-                dico["max_"+attribute]=float(max_var[i])
-                dico["std_"+attribute]=float(std_var[i])
-        # print(dico)
+                dico["mean_"+attribute]=round(float(mean_var[i]),arrondi[i])
+                dico["min_"+attribute]=round(float(min_var[i]),arrondi[i])
+                dico["max_"+attribute]=round(float(max_var[i]),arrondi[i])
+                dico["std_"+attribute]=round(float(std_var[i]),arrondi[i])
 
         nb_bin=10
-        dico["nb_bin"]=nb_bin
-        imag=labels_list.index("mag")
-        print("imag "+str(imag))
+        imag=labels_list.index(attribute_histo)
         cat2mat=np.array(cat2mat)
         aa=cat2mat[:,imag]
-        # aa=cat2mat[imag+ i*5 for i in range(len(self))]
-        print(aa)
-        fig=plt.figure()
+        fig=plt.figure(figsize=[12,8])
         mag_ybins,mag_xbins,patches=plt.hist(aa)
-        plt.title(f"Histogrammes des magnitudes pour les {len(self)} séismes sélectionnés, regroupés sur {nb_bin} bins")
-        plt.xlabel("Magnitude")
-        plt.ylabel("Nombre d'occurnces")
-        plt.show()
-        dico["mag_xbins"]=mag_xbins
-        dico["mag_ybins"]=mag_ybins
+        fig.suptitle(f"Histogrammes des {attribute_histo} pour les {len(self)} séismes sélectionnés", fontsize=14 )
+        plt.title (f"Distribués sur {nb_bin} paniers", fontsize=12)
+        plt.xlabel(attribute_histo)
+        plt.ylabel("Nombre d'occurences")
 
         suff="png"
-        fname="./data/histogramme{0:d}.".format(randrange(100000))+suff
-        fig.savefig(fname, dpi=None, facecolor='w', edgecolor='w',
-            orientation='portrait', papertype=None, format=suff,
-            transparent=False, bbox_inches=None, pad_inches=0.1,
-            frameon=None, metadata=None)
-        plt.close()
+        with TemporaryDirectory() as temp_folder:
+            fname="{3}/histogramme{0:d}_{1}.{2}".format(randrange(100000),attribute,suff, str(temp_folder))
+            fig.savefig(fname, dpi=None, facecolor='w', edgecolor='w',
+                orientation='paysage', papertype="A4", format=suff,
+                transparent=False, bbox_inches=None, pad_inches=0.1,
+                frameon=None, metadata=None)
+            with open(fname, "rb") as fig_file:
+                encoded_fig = base64.b64encode(fig_file.read()).decode('utf-8')
+        dico["nb_bin"]=nb_bin
 
-        dico["histo_name"]=fname
-
-        return dico
-
+        return (dico, encoded_fig)
