@@ -24,7 +24,7 @@ create_tables(engine)
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return redirect(url_for('query'))
 
 
 @app.route('/upload', methods=['GET', 'POST'])
