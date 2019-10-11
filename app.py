@@ -89,4 +89,6 @@ def results(query_id):
     catalog_big=catalog.keep_biggest()
     attribute_histogramme="mag" #"depth"
     stats, histo_img = catalog.stats_catalog(attribute_histogramme)
-    return render_template('results.html', earthquakes=catalog, stats=stats, catalog_big=catalog_big, histo_img=histo_img)
+    map_html = catalog.map_catalogue()
+    return render_template('results.html', earthquakes=catalog, stats=stats, catalog_big=catalog_big, histo_img=histo_img, map_html=map_html)
+
