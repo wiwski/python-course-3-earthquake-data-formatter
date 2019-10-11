@@ -86,4 +86,5 @@ def results(query_id):
     query_params = session.get(f"query_{query_id}")
     db_session = create_session(engine)
     catalog = Catalog.from_query(db_session, query_params)
-    return render_template('results.html', earthquakes=catalog)
+    map_html = catalog.map_catalogue()
+    return render_template('results.html', earthquakes=catalog, map_html=map_html)

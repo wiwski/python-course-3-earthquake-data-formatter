@@ -7,9 +7,9 @@ Catalog est une classe représentant un
 """
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime
-
 from sism.tables import Earthquake
-
+import numpy as np
+import folium
 
 class Catalog(list):
 
@@ -40,6 +40,23 @@ class Catalog(list):
                 print(f"Couldn't save earthquake: {earthquake}")
                 session.rollback()
         return True
+
+    def map_catalogue(self):
+
+        map = folium.Map(location=[np.mean([x.latitude for x in self]),
+                                   np.mean([x.longitude for x in self])])
+
+        for earthquake in self:
+            folium.vector_layers.Circle((earthquake.latitude, earthquake.longitude),
+                                    radius=earthquake.mag*10000,
+                                    popup=earthquake.time).add_to(map)
+
+        html = map._repr_html_()
+        return html
+
+    def map_catalogue_3d(self):
+        pass
+
 
     @classmethod
     def earthquake_labels(cls):
@@ -100,3 +117,4 @@ class Catalog(list):
         catalogue = Catalog(query.all())
 
         return catalogue
+

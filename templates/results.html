@@ -17,6 +17,10 @@
     {% for earthquake in earthquakes %}
     <div>{{ earthquake.__repr__() }}</div>
     {% endfor %}
+
+    <div style="width: 600px; height: 600px;">
+        {{map_html|safe}}
+    </div>
 </div>
 
 {% endblock %}
