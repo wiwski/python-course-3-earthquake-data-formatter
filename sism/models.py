@@ -37,6 +37,7 @@ class Catalog(list):
             try:
                 session.commit()
             except IntegrityError:
+                print(f"Couldn't save earthquake: {earthquake}")
                 session.rollback()
         return True
 

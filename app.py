@@ -50,5 +50,13 @@ def upload_csv():
             Catalog.from_csv_list(rows).save_to_db(session)
             file.save(os.path.join(
                 app.config['UPLOAD_FOLDER'], time.strftime(f"%Y%m%d-%H%M%S.{ext}")))
+            flash('Les données ont bien été importées')
 
     return render_template('upload.html')
+
+
+@app.route('/query', methods=['GET', 'POST'])
+def query():
+    if request.method == 'POST':
+        pass
+    return render_template('query.html')
