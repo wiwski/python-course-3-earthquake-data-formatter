@@ -16,10 +16,11 @@ class Earthquake(Base):
     __table_args__ = (UniqueConstraint('time', 'latitude', 'longitude'),)
 
     def __repr__(self):
-       return "<Earthquake(id={0},{1:s}, {2:.2f}, {3:.2f}>".format(self.id,
+       return "<Earthquake(id={0},{1:s}, {2:.2f}, {3:.2f}, mag={4:.1f}>".format(self.id,
                                                                    self.time.strftime("%d %b %Y %H:%M:%S"),
                                                                    self.latitude,
-                                                                   self.longitude)
+                                                                   self.longitude,
+                                                                   self.mag)
 
 
 def create_tables(engine):

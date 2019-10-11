@@ -2,7 +2,8 @@
 
 {% block content %}
 <div class="container">
-    <h1>Results</h1>
+    <br>
+    <h1 class="display-4">Résultats</h1>
     <br>
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -14,13 +15,65 @@
     <br>
     {% endif %}
     {% endwith %}
-    {% for earthquake in earthquakes %}
-    <div>{{ earthquake.__repr__() }}</div>
-    {% endfor %}
-
+    <br>
+  
+    
     <div style="width: 600px; height: 600px;">
         {{map_html|safe}}
     </div>
+
+    <br>
+
+    <h3 class="display-5">Séismes notables</h1>
+
+    <br>
+
+
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Time</th>
+            <th scope="col">Lat</th>
+            <th scope="col">Long</th>
+            <th scope="col">Depth</th>
+            <th scope="col">Mag</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for e in catalog_big%}
+          <tr>
+                <th>{{ e.time.strftime('%d %b %Y, %H:%M:%S') }}</th>
+                <th>{{ "%8.3f" % e.latitude }}</th>
+                <th>{{ "%8.3f" % e.longitude }}</th>
+                <th>{{ "%8.1f" % e.depth }}</th>
+                <th>{{ "%8.1f" % e.mag }}</th>
+          </tr>
+        {% endfor%}
+        </tbody>
+    </table>
+
+    <br>
+
+    <h3 class="display-5">Histogramme</h1>
+
+    <img src="data:image/png;base64, {{histo_img}}" style="width: 700px; height: 500px;" alt="">
+
+    <br>
+
+    <h3 class="display-5">Statistiques</h1>
+
+    <br>
+
+
+    <table class="table table-sm">
+        <tbody>
+            {% for key, stat in stats.items() %}
+            <tr>
+                <th>{{ key }}</th>
+                <td>{{ stat }}</td>
+            </tr>
+            {% endfor %}
+    </table>
 </div>
 
 {% endblock %}
