@@ -71,19 +71,31 @@ class Catalog(list):
         return earthquake_catalogue
 
     @classmethod
-    def from_query(cls, session, dict_query_params):
+    def from_query(cls, session, query_params: dict):
 
-        catalogue = session.query(Earthquake).filter(
-            Earthquake.time >= dict_query_params['date_min'],
-            Earthquake.time <= dict_query_params['date_max'],
-            Earthquake.latitude >= dict_query_params['lat_min'],
-            Earthquake.latitude <= dict_query_params['lat_max'],
-            Earthquake.longitude >= dict_query_params['lon_min'],
-            Earthquake.longitude <= dict_query_params['lon_max'],
-            Earthquake.depth >= dict_query_params['depth_min'],
-            Earthquake.depth <= dict_query_params['depth_max'],
-            Earthquake.mag >= dict_query_params['mag_min'],
-            Earthquake.mag <= dict_query_params['mag_max']
-        )
+        query = session.query(Earthquake)
+
+        if 'date_min' in query_params:
+            query = query.filter(Earthquake.time >= query_params['date_min'])
+        if 'date_max' in query_params:
+            query = query.filter(Earthquake.time <= query_params['date_max'])
+        if 'lat_min' in query_params:
+            query = query.filter(Earthquake.latitude >= query_params['lat_min'])
+        if 'lat_max' in query_params:
+            query = query.filter(Earthquake.latitude <= query_params['lat_max'])
+        if 'lon_min' in query_params:
+            query = query.filter(Earthquake.longitude >= query_params['lon_min'])
+        if 'lon_max' in query_params:
+            query = query.filter(Earthquake.longitude <= query_params['lon_max'])
+        if 'depth_min' in query_params:
+            query = query.filter(Earthquake.depth >= query_params['depth_min'])
+        if 'depth_max' in query_params:
+            query = query.filter(Earthquake.depth <= query_params['depth_max'])
+        if 'mag_min' in query_params:
+            query = query.filter(Earthquake.mag >= query_params['mag_min'])
+        if 'mag_max' in query_params:
+            query = query.filter(Earthquake.mag <= query_params['mag_max'])
+
+        catalogue = Catalog(query.all())
 
         return catalogue
