@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1>Results</h1>
+    <br>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-info" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+    <br>
+    {% endif %}
+    {% endwith %}
+    {% for earthquake in earthquakes %}
+    <div>{{ earthquake.__repr__() }}</div>
+    {% endfor %}
+</div>
+
+{% endblock %}

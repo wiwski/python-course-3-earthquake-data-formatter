@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>Upload</h1>
+    <br>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-info" role="alert">
+        {{ message }}
+    </div>
+    {% endfor %}
+    <br>
+    {% endif %}
+    {% endwith %}
+    <form method="POST">
+        <div class="form-row">
+            <div class="col form-group">
+                <label for="latmin">Latitude minimum</label>
+                <input type="number" class="form-control" placeholder="Latitude minimum" name="lat_min" min="-90"
+                    max="90" id="latmin">
+            </div>
+            <div class="col form-group">
+                <label for="latmax">Latitude maximum</label>
+                <input type="number" class="form-control" placeholder="Latitude maximum" name="lat_max" min="-90"
+                    max="90" id="latmax">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col form-group">
+                <label for="longmin">Longitude minimum</label>
+                <input type="number" class="form-control" placeholder="Longitude minimum" name="long_min" min="-180"
+                    max="180" id="longmin">
+            </div>
+            <div class="col form-group">
+                <label for="longmin">Longitude maximum</label>
+                <input type="number" class="form-control" placeholder="Longitude maximum" name="long_max" min="-180"
+                    max="180">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col form-group">
+                <label for="depth">Profondeur minimum (km)</label>
+                <input type="number" class="form-control" placeholder="Profondeur minimum" name="depth_min" id="depth">
+            </div>
+            <div class="col form-group">
+                <label for="depth">Profondeur maximum (km)</label>
+                <input type="number" class="form-control" placeholder="Profondeur maximum" name="depth_max" id="depth">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col form-group">
+                <label for="mag">Magnitude minimum</label>
+                <input type="number" class="form-control" placeholder="Magnitude minimum" name="mag_min" id="mag">
+            </div>
+            <div class="col form-group">
+                <label for="mag">Magnitude maximum</label>
+                <input type="number" class="form-control" placeholder="Magnitude maximum" name="mag_max" id="mag">
+            </div>
+        </div>
+        <br>
+
+        <div class="form-row">
+            <div class="col form-group">
+                <div>
+                    <label for="flatpickr">Date minimum</label>
+                </div>
+                <input name="date_min" class="form-control w-100 flatpickr" placeholder="Date minimum">
+            </div>
+            <div class="col form-group">
+                <div>
+                    <label for="flatpickr">Date maximum</label>
+                </div>
+                <input name="date_max" class="form-control w-100 flatpickr" placeholder="Date maximum">
+            </div>
+        </div>
+        <br>
+
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // your code goes here
+        flatpickr('.flatpickr', {
+            dateFormat: 'Z',
+            enableTime: true,
+            altInput: true,
+            altFormat: 'Y-m-d h:i K'
+        });
+
+    }, false);
+</script>
+{% endblock %}
