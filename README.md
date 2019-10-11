@@ -1,26 +1,38 @@
-# Exercice d'extraction et de formattage de données sismiques à partir d'un fichier CSV
+# Web application de collecte et d'analyse d'événements sismiques
 
-### Objectif
-L'objectif est d'extraire la donnée de fichiers CSV contenant des relevés sismiques à partir du site [earthquake.usgs.gov](https://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php).
+### Description
 
-Pour lancer le script, on utilise:
-```shell
-python main.py <path/csv/file>
+Cette application a été développée au cours d'une semaine de formation dédiée à Python et à son utilisation scientifique et sur le web.
+Elle permet la collecte de d'événements sismiques - précisément à partir du catalogue fournie par l'[USGS](arthquake.usgs.gov). La donnée est stockée dans une base de données afin de pouvoir être analysée via l'interface de requêtes.
+Les données peuvent être analysées afin d'accéder à des résultats comprenant des statistiques, une visualisation cartographique, et des graphiques.
+
+## Installation
+
+### Création de l'environnement virtuel et installation des dépendances
+
+```
+python -m venv env
+```
+Ensuite, après activation de l'environnement:
+```
+pip install -r requirements.txt
 ```
 
-Le script doit extraire l'information du fichier et la mettre en forme en l'affichant sur le terminal. Une première ligne indique les labels de chaque colonne, 
-on affiche ensuite les 15 premiers résultats.
-Les différents paramètres sont listé [ici](https://earthquake.usgs.gov/earthquakes/feed/v1.0/csv.php). On retiendra seulement `time`, `latitude`, `longitude`, `depth`, et `mag`.
+### Lancement de l'application (développement)
 
-La mise en forme peut se faire dans ce style:<br><br>
-![Image](https://i.ytimg.com/vi/qZMX2qUJRoU/hqdefault.jpg)
+```
+flask run
+```
+
+## Stack
+* flask
+* sqlalchemy
+* numpy
+* folium
+* matplotlib
 
 
-#### Optionnel
-
-L'utilisateur peut passer un flag `-s` ou `--sort` pour trier les résultats par un paramètre précis.
-
-# Sélection dans la BDD
+## Paramètres de requête
 Sélection selon les valeurs des attributs des séismes contenus 
 dans le catalogue. Dictionnaire avec les clés:
 * date_min (!! datetime object)
